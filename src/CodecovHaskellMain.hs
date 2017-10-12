@@ -22,6 +22,7 @@ baseUrlApiV2 = "https://codecov.io/upload/v2"
 getUrlApiV2 :: IO String
 getUrlApiV2 = do
     env <- getEnvironment
+    print env
     case snd <$> find (isJust . flip lookup env . fst) ciEnvVars of
         Just ((idParamName, idParamEnvVar), commitEnvVar, branchEnvVar) -> do
             idParamValue <- getEnv idParamEnvVar
