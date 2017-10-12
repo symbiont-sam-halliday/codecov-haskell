@@ -64,10 +64,5 @@ main = do
                     PostSuccess url _ -> do
                         responseUrl <- getUrlWithToken url "access_token" (accessToken cha)
                         putStrLn ("URL: " ++ responseUrl)
-                        -- wait 10 seconds until the page is available
-                        threadDelay (10 * 1000000)
-                        coverageResult <- readCoverageResult responseUrl (printResponse cha)
-                        case coverageResult of
-                            Just totalCoverage -> putStrLn ("Coverage: " ++ totalCoverage) >> exitSuccess
-                            Nothing -> putStrLn "Failed to read total coverage" >> exitSuccess
+                        exitSuccess
                     PostFailure msg -> putStrLn ("Error: " ++ msg) >> exitFailure
