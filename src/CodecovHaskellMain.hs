@@ -37,7 +37,9 @@ getUrlApiV2 = do
 
 getUrlWithToken :: String -> String -> Maybe String -> IO String
 getUrlWithToken apiUrl _ Nothing = return apiUrl
-getUrlWithToken apiUrl param (Just t) = return $ apiUrl ++ "&" ++ param ++ "=" ++ t
+getUrlWithToken apiUrl param (Just t) = do
+  let separator = if '?' `elem` apiUrl then "&" else "?"
+  return $ apiUrl ++ separator ++ param ++ "=" ++ t
 
 getConfig :: CodecovHaskellArgs -> Maybe Config
 getConfig cha = do _testSuites <- listToMaybe (testSuites cha)
