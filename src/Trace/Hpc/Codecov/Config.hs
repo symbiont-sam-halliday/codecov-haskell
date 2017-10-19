@@ -4,5 +4,6 @@ data Config = Config {
     excludedDirs :: ![FilePath],
     testSuites   :: ![String],
     tixDir :: !FilePath,
-    mixDir :: !FilePath
+    mixDir :: !FilePath,
+    combined :: !Bool
     }

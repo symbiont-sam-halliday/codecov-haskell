@@ -18,6 +18,7 @@ data CodecovHaskellArgs = CmdMain
     , displayReport :: Bool
     , printResponse :: Bool
     , dontSend      :: Bool
+    , combined      :: Bool
     } deriving (Data, Show, Typeable)
 
 codecovHaskellArgs :: CodecovHaskellArgs
@@ -30,6 +31,7 @@ codecovHaskellArgs = CmdMain
     , displayReport = False          &= explicit               &= name "display-report" &= help "Display the json code coverage report that will be sent to codecov.io"
     , printResponse = False          &= explicit               &= name "print-response" &= help "Prints the json reponse received from codecov.io"
     , dontSend      = False          &= explicit               &= name "dont-send"      &= help "Do not send the report to codecov.io"
+    , combined      = True           &= explicit               &= name "combined"       &= help "Generate a report from a stack combined report"
     , testSuites    = []             &= typ "TEST-SUITE" &= args
     } &= summary ("codecov-haskell-" ++ versionString version ++ ", (C) Guillaume Nargeot 2014")
       &= program "codecov-haskell"

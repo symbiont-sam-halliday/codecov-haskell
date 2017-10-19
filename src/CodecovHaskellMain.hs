@@ -1,6 +1,5 @@
 module Main where
 
-import           Control.Concurrent
 import           Control.Monad
 import           Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
@@ -46,6 +45,7 @@ getConfig cha = do _testSuites <- listToMaybe (testSuites cha)
                                  , Config.testSuites   = _testSuites
                                  , Config.tixDir       = tixDir cha
                                  , Config.mixDir       = mixDir cha
+                                 , Config.combined     = combined cha
                                  }
 
 main :: IO ()
