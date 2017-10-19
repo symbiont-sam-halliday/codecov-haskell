@@ -101,6 +101,8 @@ readCoverageData config testSuiteName excludeDirPatterns = do
         Just (Tix tixs) -> do
             mixs <- mapM (readMix' config testSuiteName) tixs
             let files = map filePath mixs
+            print mixs
+            print files
             sources <- mapM readFile files
             let coverageDataList = zip4 files sources mixs (map tixModuleTixs tixs)
             let filteredCoverageDataList = filter sourceDirFilter coverageDataList
