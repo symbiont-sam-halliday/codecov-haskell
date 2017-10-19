@@ -115,5 +115,5 @@ generateCodecovFromTix config = do
     testSuitesCoverages <- mapM (flip (readCoverageData config) excludedDirPatterns) testSuiteNames
     return $ toCodecovJson converter $ mergeCoverageData testSuitesCoverages
     where excludedDirPatterns = excludedDirs config
-          testSuiteNames = testSuites config
+          testSuiteNames = if combined config then ["all"] else testSuites config
           converter = defaultConverter
