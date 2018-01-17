@@ -32,7 +32,7 @@ getUrlApiV2 = do
            ("TRAVIS", (("job", "TRAVIS_JOB_ID"), "TRAVIS_COMMIT", "TRAVIS_BRANCH")),
            ("JENKINS_HOME", (("job", "BUILD_NUMBER"), "GIT_COMMIT", "GIT_BRANCH")),
            ("CIRCLECI", (("job", "CIRCLE_BUILD_NUM"), "CIRCLE_SHA1", "CIRCLE_BRANCH")),
-           ("GITLAB_CI" (("job", "CI_JOB_ID"), "CI_COMMIT_SHA", "CI_COMMIT_REF_NAME"))]
+           ("GITLAB_CI", (("job", "CI_JOB_ID"), "CI_COMMIT_SHA", "CI_COMMIT_REF_NAME"))]
 
 getUrlWithToken :: String -> String -> Maybe String -> IO String
 getUrlWithToken apiUrl _ Nothing = return apiUrl
