@@ -19,6 +19,8 @@ resolver: lts-10.3
 
 nix:
   enable: true
+  packages:
+    - curl
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
