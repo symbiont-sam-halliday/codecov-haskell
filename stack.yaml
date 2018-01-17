@@ -17,6 +17,9 @@
 #  location: "./custom-snapshot.yaml"
 resolver: lts-10.3
 
+nix:
+  enable: true
+
 # User packages to be built.
 # Various formats can be used as shown in the example below.
 #
