@@ -67,6 +67,15 @@ library
 executable codecov-haskell
   hs-source-dirs: src
   main-is:        CodecovHaskellMain.hs
+  other-modules:
+    CodecovHaskellCmdLine,
+    Trace.Hpc.Codecov.Config,
+    Trace.Hpc.Codecov.Curl,
+    Trace.Hpc.Codecov.Paths,
+    Trace.Hpc.Codecov,
+    Trace.Hpc.Codecov.Lix,
+    Trace.Hpc.Codecov.Types,
+    Trace.Hpc.Codecov.Util
   build-depends:
     aeson,
     base >= 4 && < 5,
