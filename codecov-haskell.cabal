@@ -49,6 +49,7 @@ library
     Trace.Hpc.Codecov.Util
   other-modules:
     CodecovHaskellCmdLine,
+    Paths_codecov_haskell,
     Trace.Hpc.Codecov.Config,
     Trace.Hpc.Codecov.Curl,
     Trace.Hpc.Codecov.Paths
@@ -59,6 +60,7 @@ library
     containers >= 0.5,
     cmdargs >= 0.10,
     curl >= 1.3.8,
+    filepath,
     hpc >= 0.6,
     retry >= 0.7,
     safe >= 0.3,
@@ -69,6 +71,7 @@ executable codecov-haskell
   main-is:        CodecovHaskellMain.hs
   other-modules:
     CodecovHaskellCmdLine,
+    Paths_codecov_haskell,
     Trace.Hpc.Codecov.Config,
     Trace.Hpc.Codecov.Curl,
     Trace.Hpc.Codecov.Paths,
@@ -83,6 +86,7 @@ executable codecov-haskell
     containers >= 0.5,
     cmdargs >= 0.10,
     curl >= 1.3.8,
+    filepath,
     hpc >= 0.6,
     retry >= 0.5,
     safe >= 0.3,
@@ -109,3 +113,6 @@ test-suite test-all
     codecov-haskell,
     HUnit
   ghc-options:    -Wall
+  other-modules:
+    TestCodecovHaskellLix
+    TestCodecovHaskellUtil
