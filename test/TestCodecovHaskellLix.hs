@@ -11,11 +11,11 @@ testToHit = "toHit" ~: [
     Irrelevant @=? toHit [],
     None       @=? toHit [False],
     None       @=? toHit [False, False],
-    Partial    @=? toHit [False, True],
-    Partial    @=? toHit [True, False],
-    Partial    @=? toHit [False, False, True],
-    Partial    @=? toHit [False, True, False],
-    Partial    @=? toHit [True, False, False],
+    Full       @=? toHit [False, True],
+    Full       @=? toHit [True, False],
+    Full       @=? toHit [False, False, True],
+    Full       @=? toHit [False, True, False],
+    Full       @=? toHit [True, False, False],
     Full       @=? toHit [True],
     Full       @=? toHit [True, True]]
 

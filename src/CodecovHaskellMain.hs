@@ -44,6 +44,8 @@ getConfig :: CodecovHaskellArgs -> Maybe Config
 getConfig cha = do _testSuites <- listToMaybe (testSuites cha)
                    return Config { Config.excludedDirs = excludeDirs cha
                                  , Config.testSuites   = _testSuites
+                                 , Config.packages   = packages cha
+                                 , Config.prefix   = prefix cha
                                  , Config.tixDir       = tixDir cha
                                  , Config.mixDir       = mixDir cha
                                  , Config.combined     = combined cha

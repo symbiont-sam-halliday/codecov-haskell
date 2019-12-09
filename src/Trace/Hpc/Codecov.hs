@@ -11,13 +11,18 @@
 
 module Trace.Hpc.Codecov ( generateCodecovFromTix ) where
 
+import           Control.Monad
 import           Data.Aeson
 import           Data.Aeson.Types ()
 import           Data.Function
 import           Data.List
 import qualified Data.Map.Strict as M
+import           Data.Maybe
+import           Debug.Trace
 import           System.Exit (exitFailure)
-import           Trace.Hpc.Codecov.Config
+import           System.FilePath
+import           System.Posix.Files
+import           Trace.Hpc.Codecov.Config as Config
 import           Trace.Hpc.Codecov.Lix
 import           Trace.Hpc.Codecov.Paths
 import           Trace.Hpc.Codecov.Types
@@ -85,8 +90,36 @@ mergeModuleCoverageData (source, mix, tixs1) (_, _, tixs2) =
 mergeCoverageData :: [TestSuiteCoverageData] -> TestSuiteCoverageData
 mergeCoverageData = foldr1 (M.unionWith mergeModuleCoverageData)
 
-readMix' :: Config -> String -> TixModule -> IO Mix
-readMix' config name tix = readMix (getMixPaths config name tix) $ Right tix
+readMixForPackage :: Config -> String -> String -> TixModule -> IO (Maybe Mix)
+readMixForPackage config name pkg tix = do
+    let mixDirs = getMixPaths config name tix pkg
+    let mixFiles = map (\d -> d </> (tixModuleName tix) <> ".mix") mixDirs
+    result <- filterM fileExist mixFiles
+    case result of
+      [] -> return Nothing
+      _  -> fmap Just (readMix mixDirs $ Right tix)
+
+readCoverageDataForPackage :: Config -- ^ codecov-haskell configuration
+                 -> [TixModule]      -- ^ per-module tix data
+                 -> String           -- ^ test suite name
+                 -> String           -- ^ package
+                 -> IO TestSuiteCoverageData
+readCoverageDataForPackage config allTixs testSuiteName pkg = do
+            maybeMixs <- mapM (readMixForPackage config testSuiteName pkg) allTixs
+            let (tixs, mixs) = unzip . catMaybes . map sequence $ zip allTixs maybeMixs
+
+            let files = map (\p -> pkg </> p) $ map filePath mixs
+            sources <- mapM readFile files
+
+            let fullyQualifiedMixes = map (\(Mix a b c d e) -> Mix (Config.prefix config </> pkg </> a) b c d e) mixs
+            let fullyQualifiedFiles = map filePath fullyQualifiedMixes
+
+            let coverageDataList = zip4 fullyQualifiedFiles sources fullyQualifiedMixes (map tixModuleTixs tixs)
+            let filteredCoverageDataList = filter sourceDirFilter coverageDataList
+            return $ M.fromList $ map toFirstAndRest filteredCoverageDataList
+            where filePath (Mix fp _ _ _ _) = fp
+                  sourceDirFilter = not . matchAny (Config.excludedDirs config) . fst4
+
 
 -- | Create a list of coverage data from the tix input
 readCoverageData :: Config                   -- ^ codecov-haskell configuration 
@@ -98,17 +131,10 @@ readCoverageData config testSuiteName excludeDirPatterns = do
     mtix <- readTix tixPath
     case mtix of
         Nothing -> error ("Couldn't find the file " ++ tixPath) >> exitFailure
-        Just (Tix tixs) -> do
-            mixs <- mapM (readMix' config testSuiteName) tixs
-            let files = map filePath mixs
-            print mixs
-            print files
-            sources <- mapM readFile files
-            let coverageDataList = zip4 files sources mixs (map tixModuleTixs tixs)
-            let filteredCoverageDataList = filter sourceDirFilter coverageDataList
-            return $ M.fromList $ map toFirstAndRest filteredCoverageDataList
-            where filePath (Mix fp _ _ _ _) = fp
-                  sourceDirFilter = not . matchAny excludeDirPatterns . fst4
+        Just (Tix allTixs) -> do
+            let pkgs = if length (Config.packages config) == 0 then [""] else Config.packages config
+            ms <- mapM (readCoverageDataForPackage config allTixs testSuiteName) pkgs
+            return $ M.unions(ms)
 
 -- | Generate codecov json formatted code coverage from hpc coverage data
 generateCodecovFromTix :: Config   -- ^ codecov-haskell configuration

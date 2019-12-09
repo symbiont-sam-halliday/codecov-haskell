@@ -23,7 +23,7 @@ toHit []  = Irrelevant
 toHit [x] = if x then Full else None
 toHit xs
     | and xs    = Full
-    | or xs     = Partial
+    | or xs     = Full
     | otherwise = None
 
 getLine :: MixEntry -> Int

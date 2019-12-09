@@ -22,9 +22,10 @@ defaultTixDir = defaultHpcDir </> "tix/"
 defaultMixDir :: FilePath
 defaultMixDir = defaultHpcDir </> "mix/"
 
-getMixPaths :: Config -> String -> TixModule -> [FilePath]
-getMixPaths config testSuiteName tix = do _dirName <- dirName
-                                          return $ mixDir config </> _dirName </> ""
+getMixPaths :: Config -> String -> TixModule -> String -> [FilePath]
+getMixPaths config testSuiteName tix pkg = do
+      _dirName <- dirName
+      return $ pkg </> mixDir config </> _dirName </> ""
     where dirName = case span (/= '/') modName of
               (_, [])        -> [ testSuiteName ]
               (packageId, _) -> [ "", packageId ]

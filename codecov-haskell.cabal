@@ -64,7 +64,8 @@ library
     hpc >= 0.6,
     retry >= 0.7,
     safe >= 0.3,
-    split
+    split,
+    unix
 
 executable codecov-haskell
   hs-source-dirs: src
@@ -90,7 +91,8 @@ executable codecov-haskell
     hpc >= 0.6,
     retry >= 0.5,
     safe >= 0.3,
-    split
+    split,
+    unix
   ghc-options:    -Wall -fwarn-tabs -fwarn-incomplete-uni-patterns
 
 executable run-cabal-test
